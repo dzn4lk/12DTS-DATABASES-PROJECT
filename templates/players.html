@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Football Players</title>
+</head>
+
+<body>
+
+<h1>Football Players</h1>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Player Name</th>
+
+
+    {% for player in players %}
+    <tr>
+        <td>{{ player['playerID'] }}</td>
+        <td>{{ player['playerName'] }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+</body>
+</html>
