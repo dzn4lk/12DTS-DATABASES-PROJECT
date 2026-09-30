@@ -10,12 +10,18 @@
 
 <table border="1">
     <tr>
+        <th>Image</th>
         <th>ID</th>
         <th>Player Name</th>
 
 
     {% for player in players %}
     <tr>
+
+        <td>
+            <img src="{{ url_for('static', filename='images/' + player['playerImage']) }}" width="100">
+        </td>
+
         <td>{{ player['playerID'] }}</td>
         <td>{{ player['playerName'] }}</td>
     </tr>
