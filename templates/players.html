@@ -13,6 +13,14 @@
         <th>Image</th>
         <th>ID</th>
         <th>Player Name</th>
+        <th>Player Country</th>
+        <th>Player Club</th>
+        <th>Player Position</th>
+        <th>Player Age</th>
+        <th>Market Value (1 = 1,000,000)</th>
+        <th>Career Goals</th>
+        <th>Career Matches Played</th>
+        <th>International player?</th>
 
 
     {% for player in players %}
@@ -24,6 +32,16 @@
 
         <td>{{ player['playerID'] }}</td>
         <td>{{ player['playerName'] }}</td>
+        <td>{{ player['CountryID'] }}</td>
+        <td>{{ player['ClubID'] }}</td>
+        <td>{{ player['PositionID'] }}</td>
+        <td>{{ player['Age'] }}</td>
+        <td>{{ player['MarketValue'] }}</td>
+        <td>{{ player['Goals'] }}</td>
+        <td>{{ player['MatchesPlayed'] }}</td>
+        <td>{{ player['InternationalPlayer'] }}</td>
+
+
     </tr>
     {% endfor %}
 
