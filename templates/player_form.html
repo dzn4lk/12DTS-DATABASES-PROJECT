@@ -1,0 +1,111 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Player Form</title>
+</head>
+<body>
+
+    {% if player %}
+        <h1>Edit Player</h1>
+    {% else %}
+        <h1>Add Player</h1>
+    {% endif %}
+
+    <form method="POST">
+
+        <label>Player Name:</label>
+        <input type="text" name="playerName"
+               value="{{ player['playerName'] if player else '' }}"
+               required>
+        <br><br>
+
+        <label>Player Image Filename:</label>
+        <input type="text" name="playerImage"
+               value="{{ player['playerImage'] if player else '' }}"
+               placeholder="e.g. salah.jpg"
+               required>
+        <br><br>
+
+        <label>Country ID:</label>
+        <input type="number" name="CountryID"
+               value="{{ player['CountryID'] if player else '' }}"
+               required>
+        <br><br>
+
+        <label>Club ID:</label>
+        <input type="number" name="ClubID"
+               value="{{ player['ClubID'] if player else '' }}"
+               required>
+        <br><br>
+
+        <label>Position ID:</label>
+        <input type="number" name="PositionID"
+               value="{{ player['PositionID'] if player else '' }}"
+               required>
+        <br><br>
+
+        <label>Age:</label>
+        <input type="number" name="Age" min="15" max="60"
+               value="{{ player['Age'] if player else '' }}"
+               required>
+        <br><br>
+
+        <label>Market Value (in millions):</label>
+        <input type="number" name="MarketValue" min="0" step="0.1"
+               value="{{ player['MarketValue'] if player else 0 }}"
+               required>
+        <br><br>
+
+        <label>Career Goals:</label>
+        <input type="number" name="Goals" min="0"
+               value="{{ player['Goals'] if player else 0 }}"
+               required>
+        <br><br>
+
+        <label>Career Matches Played:</label>
+        <input type="number" name="MatchesPlayed" min="0"
+               value="{{ player['MatchesPlayed'] if player else 0 }}"
+               required>
+        <br><br>
+
+        <label>International Player?</label>
+        <select name="InternationalPlayer" required>
+            <option value="1"
+                {% if player and player['InternationalPlayer'] == 1 %}selected{% endif %}>
+                Yes
+            </option>
+            <option value="0"
+                {% if player and player['InternationalPlayer'] == 0 %}selected{% endif %}>
+                No
+            </option>
+        </select>
+
+        <br><br>
+
+        <button type="submit">
+            {% if player %}
+                Save Changes
+            {% else %}
+                Add Player
+            {% endif %}
+        </button>
+
+    </form>
+
+    {% if player %}
+        <form method="POST"
+              action="{{ url_for('delete_player',
+                                 player_id=player['playerID']) }}"
+              onsubmit="return confirm('Are you sure you want to delete this player?');">
+
+            <button type="submit">Delete Player</button>
+        </form>
+    {% endif %}
+
+    <br>
+    <a href="{{ url_for('players') }}">Back to Players</a>
+
+</body>
+</html>
+```

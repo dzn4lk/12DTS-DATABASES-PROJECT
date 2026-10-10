@@ -3,10 +3,15 @@
 <head>
     <title>Football Players</title>
 </head>
-
 <body>
 
 <h1>Football Players</h1>
+
+<a href="{{ url_for('add_player') }}">
+    <button type="button">+ Add New Player</button>
+</a>
+
+<br><br>
 
 <table border="1">
     <tr>
@@ -21,13 +26,14 @@
         <th>Career Goals</th>
         <th>Career Matches Played</th>
         <th>International player?</th>
-
+        <th>Actions</th>
+    </tr>
 
     {% for player in players %}
     <tr>
-
         <td>
-            <img src="{{ url_for('static', filename='images/' + player['playerImage']) }}" width="100">
+            <img src="{{ url_for('static', filename='images/' + player['playerImage']) }}"
+                 width="100">
         </td>
 
         <td>{{ player['playerID'] }}</td>
@@ -41,7 +47,12 @@
         <td>{{ player['MatchesPlayed'] }}</td>
         <td>{{ player['InternationalPlayer'] }}</td>
 
-
+        <td>
+            <a href="{{ url_for('edit_player',
+                                player_id=player['playerID']) }}">
+                Edit
+            </a>
+        </td>
     </tr>
     {% endfor %}
 
@@ -49,3 +60,4 @@
 
 </body>
 </html>
+```

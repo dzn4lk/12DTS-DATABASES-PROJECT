@@ -173,6 +173,230 @@ def edit_country(country_id):
         country=country
     )
 
+# ADD A PLAYER
+@app.route("/players/add", methods=["GET", "POST"])
+def add_player():
+
+    if request.method == "POST":
+
+        player_name = request.form["playerName"]
+        player_image = request.form["playerImage"]
+        country_id = request.form["CountryID"]
+        club_id = request.form["ClubID"]
+        position_id = request.form["PositionID"]
+        age = request.form["Age"]
+        market_value = request.form["MarketValue"]
+        goals = request.form["Goals"]
+        matches_played = request.form["MatchesPlayed"]
+        international_player = request.form["InternationalPlayer"]
+
+        conn = get_db()
+
+        conn.execute("""
+            INSERT INTO players
+            (playerName, playerImage, CountryID, ClubID, PositionID,
+             Age, MarketValue, Goals, MatchesPlayed, InternationalPlayer)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            player_name,
+            player_image,
+            country_id,
+            club_id,
+            position_id,
+            age,
+            market_value,
+            goals,
+            matches_played,
+            international_player
+        ))
+
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("players"))
+
+    return render_template("player_form.html", player=None)
+
+
+# EDIT A PLAYER
+@app.route("/players/edit/<int:player_id>", methods=["GET", "POST"])
+def edit_player(player_id):
+
+    conn = get_db()
+
+    player = conn.execute(
+        "SELECT * FROM players WHERE playerID = ?",
+        (player_id,)
+    ).fetchone()
+
+    if player is None:
+        conn.close()
+        return "Player not found", 404
+
+    if request.method == "POST":
+
+        player_name = request.form["playerName"]
+        player_image = request.form["playerImage"]
+        country_id = request.form["CountryID"]
+        club_id = request.form["ClubID"]
+        position_id = request.form["PositionID"]
+        age = request.form["Age"]
+        market_value = request.form["MarketValue"]
+        goals = request.form["Goals"]
+        matches_played = request.form["MatchesPlayed"]
+        international_player = request.form["InternationalPlayer"]
+
+        conn.execute("""
+            UPDATE players
+            SET playerName = ?,
+                playerImage = ?,
+                CountryID = ?,
+                ClubID = ?,
+                PositionID = ?,
+                Age = ?,
+                MarketValue = ?,
+                Goals = ?,
+                MatchesPlayed = ?,
+                InternationalPlayer = ?
+            WHERE playerID = ?
+        """, (
+            player_name,
+            player_image,
+            country_id,
+            club_id,
+            position_id,
+            age,
+            market_value,
+            goals,
+            matches_played,
+            international_player,
+            player_id
+        ))
+
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("players"))
+
+    conn.close()
+
+    return render_template("player_form.html", player=player)
+
+
+# DELETE A PLAYER
+@app.route("/players/delete/<int:player_id>", methods=["POST"])
+def delete_player(player_id):
+
+    conn = get_db()
+
+    conn.execute(
+        "DELETE FROM players WHERE playerID = ?",
+        (player_id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("players"))
+
+# DISPLAY ALL POSITIONS
+@app.route("/positions")
+def positions():
+
+    conn = get_db()
+
+    positions = conn.execute(
+        "SELECT * FROM positions"
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "positions.html",
+        positions=positions
+    )
+
+
+# ADD A POSITION
+@app.route("/positions/add", methods=["GET", "POST"])
+def add_position():
+
+    if request.method == "POST":
+
+        position_name = request.form["position_name"]
+
+        conn = get_db()
+
+        conn.execute(
+            "INSERT INTO positions (PositionName) VALUES (?)",
+            (position_name,)
+        )
+
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("positions"))
+
+    return render_template("position_form.html", position=None)
+
+
+# EDIT A POSITION
+@app.route("/positions/edit/<int:position_id>",
+           methods=["GET", "POST"])
+def edit_position(position_id):
+
+    conn = get_db()
+
+    position = conn.execute(
+        "SELECT * FROM positions WHERE ID = ?",
+        (position_id,)
+    ).fetchone()
+
+    if position is None:
+        conn.close()
+        return "Position not found", 404
+
+    if request.method == "POST":
+
+        position_name = request.form["position_name"]
+
+        conn.execute(
+            "UPDATE positions SET PositionName = ? WHERE ID = ?",
+            (position_name, position_id)
+        )
+
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("positions"))
+
+    conn.close()
+
+    return render_template(
+        "position_form.html",
+        position=position
+    )
+
+
+# DELETE A POSITION
+@app.route("/positions/delete/<int:position_id>",
+           methods=["POST"])
+def delete_position(position_id):
+
+    conn = get_db()
+
+    conn.execute(
+        "DELETE FROM positions WHERE ID = ?",
+        (position_id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("positions"))
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
 
