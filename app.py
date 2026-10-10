@@ -10,11 +10,28 @@ def get_db():
 
 @app.route("/players")
 def players():
+
     conn = get_db()
-    players = conn.execute("SELECT * FROM players").fetchall()
+
+    players = conn.execute("""
+        SELECT
+            players.*,
+            countries.CountryName,
+            clubs.ClubName,
+            positions.PositionName
+        FROM players
+        LEFT JOIN countries
+            ON players.CountryID = countries.ID
+        LEFT JOIN clubs
+            ON players.ClubID = clubs.ID
+        LEFT JOIN positions
+            ON players.PositionID = positions.ID
+    """).fetchall()
+
     conn.close()
 
     return render_template("players.html", players=players)
+
 
 @app.route("/countries")
 def countries():
@@ -177,20 +194,9 @@ def edit_country(country_id):
 @app.route("/players/add", methods=["GET", "POST"])
 def add_player():
 
+    conn = get_db()
+
     if request.method == "POST":
-
-        player_name = request.form["playerName"]
-        player_image = request.form["playerImage"]
-        country_id = request.form["CountryID"]
-        club_id = request.form["ClubID"]
-        position_id = request.form["PositionID"]
-        age = request.form["Age"]
-        market_value = request.form["MarketValue"]
-        goals = request.form["Goals"]
-        matches_played = request.form["MatchesPlayed"]
-        international_player = request.form["InternationalPlayer"]
-
-        conn = get_db()
 
         conn.execute("""
             INSERT INTO players
@@ -198,16 +204,16 @@ def add_player():
              Age, MarketValue, Goals, MatchesPlayed, InternationalPlayer)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            player_name,
-            player_image,
-            country_id,
-            club_id,
-            position_id,
-            age,
-            market_value,
-            goals,
-            matches_played,
-            international_player
+            request.form["playerName"],
+            request.form["playerImage"],
+            request.form["CountryID"],
+            request.form["ClubID"],
+            request.form["PositionID"],
+            request.form["Age"],
+            request.form["MarketValue"],
+            request.form["Goals"],
+            request.form["MatchesPlayed"],
+            request.form["InternationalPlayer"]
         ))
 
         conn.commit()
@@ -215,11 +221,32 @@ def add_player():
 
         return redirect(url_for("players"))
 
-    return render_template("player_form.html", player=None)
+    countries = conn.execute(
+        "SELECT * FROM countries ORDER BY CountryName"
+    ).fetchall()
+
+    clubs = conn.execute(
+        "SELECT * FROM clubs ORDER BY ClubName"
+    ).fetchall()
+
+    positions = conn.execute(
+        "SELECT * FROM positions ORDER BY PositionName"
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "player_form.html",
+        player=None,
+        countries=countries,
+        clubs=clubs,
+        positions=positions
+    )
 
 
 # EDIT A PLAYER
-@app.route("/players/edit/<int:player_id>", methods=["GET", "POST"])
+@app.route("/players/edit/<int:player_id>",
+           methods=["GET", "POST"])
 def edit_player(player_id):
 
     conn = get_db()
@@ -235,17 +262,6 @@ def edit_player(player_id):
 
     if request.method == "POST":
 
-        player_name = request.form["playerName"]
-        player_image = request.form["playerImage"]
-        country_id = request.form["CountryID"]
-        club_id = request.form["ClubID"]
-        position_id = request.form["PositionID"]
-        age = request.form["Age"]
-        market_value = request.form["MarketValue"]
-        goals = request.form["Goals"]
-        matches_played = request.form["MatchesPlayed"]
-        international_player = request.form["InternationalPlayer"]
-
         conn.execute("""
             UPDATE players
             SET playerName = ?,
@@ -260,16 +276,16 @@ def edit_player(player_id):
                 InternationalPlayer = ?
             WHERE playerID = ?
         """, (
-            player_name,
-            player_image,
-            country_id,
-            club_id,
-            position_id,
-            age,
-            market_value,
-            goals,
-            matches_played,
-            international_player,
+            request.form["playerName"],
+            request.form["playerImage"],
+            request.form["CountryID"],
+            request.form["ClubID"],
+            request.form["PositionID"],
+            request.form["Age"],
+            request.form["MarketValue"],
+            request.form["Goals"],
+            request.form["MatchesPlayed"],
+            request.form["InternationalPlayer"],
             player_id
         ))
 
@@ -278,9 +294,27 @@ def edit_player(player_id):
 
         return redirect(url_for("players"))
 
+    countries = conn.execute(
+        "SELECT * FROM countries ORDER BY CountryName"
+    ).fetchall()
+
+    clubs = conn.execute(
+        "SELECT * FROM clubs ORDER BY ClubName"
+    ).fetchall()
+
+    positions = conn.execute(
+        "SELECT * FROM positions ORDER BY PositionName"
+    ).fetchall()
+
     conn.close()
 
-    return render_template("player_form.html", player=player)
+    return render_template(
+        "player_form.html",
+        player=player,
+        countries=countries,
+        clubs=clubs,
+        positions=positions
+    )
 
 
 # DELETE A PLAYER

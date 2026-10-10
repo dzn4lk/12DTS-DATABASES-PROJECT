@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,23 +26,59 @@
                required>
         <br><br>
 
-        <label>Country ID:</label>
-        <input type="number" name="CountryID"
-               value="{{ player['CountryID'] if player else '' }}"
-               required>
+       ```html
+        <!-- COUNTRY DROPDOWN -->
+        <label>Country:</label>
+        <select name="CountryID" required>
+            <option value="">Choose a country</option>
+
+            {% for country in countries %}
+            <option value="{{ country['ID'] }}"
+                {% if player and player['CountryID'] == country['ID'] %}
+                    selected
+                {% endif %}>
+                {{ country['CountryName'] }}
+            </option>
+            {% endfor %}
+        </select>
+
         <br><br>
 
-        <label>Club ID:</label>
-        <input type="number" name="ClubID"
-               value="{{ player['ClubID'] if player else '' }}"
-               required>
+        <!-- CLUB DROPDOWN -->
+        <label>Club:</label>
+        <select name="ClubID" required>
+            <option value="">Choose a club</option>
+
+            {% for club in clubs %}
+            <option value="{{ club['ID'] }}"
+                {% if player and player['ClubID'] == club['ID'] %}
+                    selected
+                {% endif %}>
+                {{ club['ClubName'] }}
+            </option>
+            {% endfor %}
+        </select>
+
         <br><br>
 
-        <label>Position ID:</label>
-        <input type="number" name="PositionID"
-               value="{{ player['PositionID'] if player else '' }}"
-               required>
+        <!-- POSITION DROPDOWN -->
+        <label>Position:</label>
+        <select name="PositionID" required>
+            <option value="">Choose a position</option>
+
+            {% for position in positions %}
+            <option value="{{ position['ID'] }}"
+                {% if player and player['PositionID'] == position['ID'] %}
+                    selected
+                {% endif %}>
+                {{ position['PositionName'] }}
+            </option>
+            {% endfor %}
+        </select>
+
         <br><br>
+
+
 
         <label>Age:</label>
         <input type="number" name="Age" min="15" max="60"
