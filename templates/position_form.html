@@ -1,11 +1,17 @@
-```html
 <!DOCTYPE html>
 <html>
 <head>
     <title>Position Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
+<nav>
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('players') }}">Players</a>
+    <a href="{{ url_for('countries') }}">Countries</a>
+    <a href="{{ url_for('clubs') }}">Clubs</a>
+    <a href="{{ url_for('positions') }}">Positions</a>
+</nav>
     {% if position %}
         <h1>Edit Position</h1>
     {% else %}

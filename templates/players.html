@@ -2,158 +2,89 @@
 <html>
 <head>
     <title>Football Players</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
-<a href="{{ url_for('home') }}">Home</a>
+<nav>
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('players') }}">Players</a>
+    <a href="{{ url_for('countries') }}">Countries</a>
+    <a href="{{ url_for('clubs') }}">Clubs</a>
+    <a href="{{ url_for('positions') }}">Positions</a>
+</nav>
 
 <h1>Football Players</h1>
 
-<a href="{{ url_for('add_player') }}">
-    <button type="button">+ Add New Player</button>
-</a>
+
 
 <h2>Filter Players</h2>
+<form method="GET" action="{{ url_for('players') }}" class="filter-form">
 
-<form method="GET" action="{{ url_for('players') }}">
+    <input type="text" name="search_name" placeholder="Search player name"
+           value="{{ search_name }}">
 
-    <!-- Search by player name -->
-    <label>Player Name:</label>
-    <input
-        type="text"
-        name="search_name"
-        placeholder="Search players..."
-        value="{{ search_name }}"
-    >
-
-    <br><br>
-
-    <!-- Country dropdown -->
-    <label>Country:</label>
     <select name="country_id">
         <option value="">All Countries</option>
-
         {% for country in countries %}
-        <option
-            value="{{ country['ID'] }}"
-            {% if selected_country|string == country['ID']|string %}
-                selected
-            {% endif %}
-        >
+        <option value="{{ country['ID'] }}"
+            {% if selected_country == country['ID']|string %}selected{% endif %}>
             {{ country['CountryName'] }}
         </option>
         {% endfor %}
     </select>
 
-    <br><br>
-
-    <!-- Club dropdown -->
-    <label>Club:</label>
     <select name="club_id">
         <option value="">All Clubs</option>
-
         {% for club in clubs %}
-        <option
-            value="{{ club['ID'] }}"
-            {% if selected_club|string == club['ID']|string %}
-                selected
-            {% endif %}
-        >
+        <option value="{{ club['ID'] }}"
+            {% if selected_club == club['ID']|string %}selected{% endif %}>
             {{ club['ClubName'] }}
         </option>
         {% endfor %}
     </select>
 
-    <br><br>
-
-    <!-- Position dropdown -->
-    <label>Position:</label>
     <select name="position_id">
         <option value="">All Positions</option>
-
         {% for position in positions %}
-        <option
-            value="{{ position['ID'] }}"
-            {% if selected_position|string == position['ID']|string %}
-                selected
-            {% endif %}
-        >
+        <option value="{{ position['ID'] }}"
+            {% if selected_position == position['ID']|string %}selected{% endif %}>
             {{ position['PositionName'] }}
         </option>
         {% endfor %}
     </select>
 
-    <br><br>
-
-    <!-- Age dropdown -->
-    <label>Age:</label>
     <select name="age_group">
         <option value="">All Ages</option>
-        <option value="under20"
-            {% if selected_age == 'under20' %}selected{% endif %}>
-            Under 20
-        </option>
-        <option value="20to24"
-            {% if selected_age == '20to24' %}selected{% endif %}>
-            20–24
-        </option>
-        <option value="25to29"
-            {% if selected_age == '25to29' %}selected{% endif %}>
-            25–29
-        </option>
-        <option value="30plus"
-            {% if selected_age == '30plus' %}selected{% endif %}>
-            30+
-        </option>
+        <option value="under20" {% if selected_age == 'under20' %}selected{% endif %}>Under 20</option>
+        <option value="20to24" {% if selected_age == '20to24' %}selected{% endif %}>20–24</option>
+        <option value="25to29" {% if selected_age == '25to29' %}selected{% endif %}>25–29</option>
+        <option value="30plus" {% if selected_age == '30plus' %}selected{% endif %}>30+</option>
     </select>
 
-    <br><br>
-
-    <!-- Market value dropdown -->
-    <label>Market Value:</label>
     <select name="value_group">
-        <option value="">All Values</option>
-        <option value="under10"
-            {% if selected_value == 'under10' %}selected{% endif %}>
-            Under 10 million
-        </option>
-        <option value="10to50"
-            {% if selected_value == '10to50' %}selected{% endif %}>
-            10–50 million
-        </option>
-        <option value="over50"
-            {% if selected_value == 'over50' %}selected{% endif %}>
-            Over 50 million
-        </option>
+        <option value="">All Market Values</option>
+        <option value="under10" {% if selected_value == 'under10' %}selected{% endif %}>Under €10m</option>
+        <option value="10to50" {% if selected_value == '10to50' %}selected{% endif %}>€10m–€50m</option>
+        <option value="over50" {% if selected_value == 'over50' %}selected{% endif %}>Over €50m</option>
     </select>
 
-    <br><br>
-
-    <!-- International player dropdown -->
-    <label>International Player:</label>
     <select name="international">
         <option value="">All Players</option>
-        <option value="1"
-            {% if selected_international == '1' %}selected{% endif %}>
-            Yes
-        </option>
-        <option value="0"
-            {% if selected_international == '0' %}selected{% endif %}>
-            No
-        </option>
+        <option value="1" {% if selected_international == '1' %}selected{% endif %}>International</option>
+        <option value="0" {% if selected_international == '0' %}selected{% endif %}>Not International</option>
     </select>
 
-    <br><br>
-
     <button type="submit">Apply Filters</button>
-
-    <a href="{{ url_for('players') }}">Clear Filters</a>
+    <a href="{{ url_for('players') }}" class="clear-filters">Clear</a>
 
 </form>
 
+
+
+
+
+
 <hr>
-
-
 
 <br><br>
 
@@ -201,7 +132,9 @@
     {% endfor %}
 
 </table>
-
+<a href="{{ url_for('add_player') }}">
+    <button type="button">+ Add New Player</button>
+</a>
 </body>
 </html>
-```
+

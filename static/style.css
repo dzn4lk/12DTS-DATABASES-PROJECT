@@ -1,0 +1,353 @@
+/* =====================================
+   FOOTBALL DATABASE - GLOBAL STYLESHEET
+   ===================================== */
+
+/* 1. Global colours and settings */
+:root {
+    --primary: #1264e8;
+    --primary-dark: #0846ad;
+    --secondary: #64748b;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --background: #f1f5f9;
+    --surface: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #dbe3ed;
+    --radius: 10px;
+    --shadow: 0 3px 12px rgba(15, 23, 42, 0.06);
+}
+
+/* 2. Reset */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 25px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    background: var(--background);
+    color: var(--text);
+}
+
+/* 3. Page layout */
+body > h1,
+body > h2,
+body > h3,
+body > p,
+body > ul,
+body > form,
+body > table,
+body > nav,
+body > hr,
+body > a,
+body > div {
+    max-width: 1200px;
+}
+
+body > h1,
+body > h2,
+body > h3,
+body > p,
+body > ul,
+body > form,
+body > table,
+body > nav,
+body > hr,
+body > a,
+body > div {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1 {
+    color: var(--primary-dark);
+    font-size: 2rem;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: var(--text);
+    font-size: 1.4rem;
+    margin-top: 25px;
+}
+
+p {
+    color: var(--muted);
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+/* 4. Navigation */
+nav {
+    background: var(--primary);
+    padding: 14px 20px;
+    border-radius: var(--radius);
+    margin-bottom: 25px;
+    box-shadow: var(--shadow);
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin-right: 22px;
+    display: inline-block;
+}
+
+nav a:hover {
+    text-decoration: underline;
+    color: #dbeafe;
+}
+
+/* 5. Links */
+a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* 6. Buttons */
+button,
+input[type="submit"] {
+    display: inline-block;
+    padding: 10px 17px;
+    border: none;
+    border-radius: 7px;
+    background: var(--primary);
+    color: white;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    background: var(--primary-dark);
+}
+
+/* Delete buttons */
+form[action*="/delete/"] button {
+    background: var(--danger);
+}
+
+form[action*="/delete/"] button:hover {
+    background: #b91c1c;
+}
+
+/* 7. Forms and filter panels */
+form {
+    background: var(--surface);
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: var(--text);
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="search"],
+select,
+textarea {
+    width: 100%;
+    max-width: 450px;
+    padding: 11px 12px;
+    margin-bottom: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    background: white;
+    color: var(--text);
+    font: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #93c5fd;
+    border-color: var(--primary);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    accent-color: var(--primary);
+}
+
+/* 8. Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-top: 20px;
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+
+th {
+    background: var(--primary);
+    color: white;
+    font-weight: bold;
+    text-align: left;
+    padding: 13px;
+    white-space: nowrap;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+tr:hover {
+    background: #eff6ff;
+}
+
+/* Player photos */
+td img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* 9. Homepage menu */
+ul {
+    padding-left: 25px;
+}
+
+ul li {
+    margin-bottom: 12px;
+}
+
+ul li a {
+    font-weight: bold;
+}
+
+/* 10. Responsive tables */
+@media (max-width: 900px) {
+    body {
+        padding: 15px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    nav a {
+        margin-right: 12px;
+        margin-bottom: 5px;
+    }
+}
+
+/* 11. Mobile screens */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+        font-size: 15px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    form {
+        padding: 15px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="search"],
+    select,
+    textarea {
+        max-width: 100%;
+    }
+
+    button,
+    input[type="submit"] {
+        max-width: 100%;
+    }
+
+    nav {
+        padding: 12px;
+    }
+
+    nav a {
+        margin-right: 10px;
+    }
+/* HORIZONTAL PLAYER FILTERS */
+.filter-form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-form input[type="text"],
+.filter-form input[type="search"],
+.filter-form select {
+    flex: 1 1 140px;
+    width: auto;
+    min-width: 120px;
+    max-width: 200px;
+    margin: 0;
+}
+
+.filter-form button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.filter-form .clear-filters {
+    display: inline-block;
+    padding: 10px 12px;
+    white-space: nowrap;
+}
+
+/* Keep filters horizontal where there is enough space */
+@media (max-width: 600px) {
+    .filter-form {
+        flex-direction: row;
+    }
+
+    .filter-form input[type="text"],
+    .filter-form input[type="search"],
+    .filter-form select {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+}
+}
+
