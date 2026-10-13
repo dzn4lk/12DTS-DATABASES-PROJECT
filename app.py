@@ -8,12 +8,26 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
+@app.route("/")
+def home():
+    return render_template("home.html")
+
 @app.route("/players")
 def players():
 
     conn = get_db()
 
-    players = conn.execute("""
+    # Get the selected filters from the URL
+    country_id = request.args.get("country_id", "")
+    club_id = request.args.get("club_id", "")
+    position_id = request.args.get("position_id", "")
+    age_group = request.args.get("age_group", "")
+    value_group = request.args.get("value_group", "")
+    international = request.args.get("international", "")
+    search_name = request.args.get("search_name", "").strip()
+
+    # Start building the SQL query
+    query = """
         SELECT
             players.*,
             countries.CountryName,
@@ -26,11 +40,89 @@ def players():
             ON players.ClubID = clubs.ID
         LEFT JOIN positions
             ON players.PositionID = positions.ID
-    """).fetchall()
+        WHERE 1 = 1
+    """
+
+    parameters = []
+
+    # Filter by country
+    if country_id:
+        query += " AND players.CountryID = ?"
+        parameters.append(country_id)
+
+    # Filter by club
+    if club_id:
+        query += " AND players.ClubID = ?"
+        parameters.append(club_id)
+
+    # Filter by position
+    if position_id:
+        query += " AND players.PositionID = ?"
+        parameters.append(position_id)
+
+    # Filter by age group
+    if age_group == "under20":
+        query += " AND players.Age < 20"
+    elif age_group == "20to24":
+        query += " AND players.Age BETWEEN 20 AND 24"
+    elif age_group == "25to29":
+        query += " AND players.Age BETWEEN 25 AND 29"
+    elif age_group == "30plus":
+        query += " AND players.Age >= 30"
+
+    # Filter by market value (in millions)
+    if value_group == "under10":
+        query += " AND players.MarketValue < 10"
+    elif value_group == "10to50":
+        query += " AND players.MarketValue BETWEEN 10 AND 50"
+    elif value_group == "over50":
+        query += " AND players.MarketValue > 50"
+
+    # Filter by international status
+    if international in ("0", "1"):
+        query += " AND players.InternationalPlayer = ?"
+        parameters.append(international)
+
+    # Search by player name
+    if search_name:
+        query += " AND players.playerName LIKE ?"
+        parameters.append("%" + search_name + "%")
+
+    # Sort the results alphabetically
+    query += " ORDER BY players.playerName"
+
+    players = conn.execute(query, parameters).fetchall()
+
+    # Load options for the dropdown menus
+    countries = conn.execute(
+        "SELECT * FROM countries ORDER BY CountryName"
+    ).fetchall()
+
+    clubs = conn.execute(
+        "SELECT * FROM clubs ORDER BY ClubName"
+    ).fetchall()
+
+    positions = conn.execute(
+        "SELECT * FROM positions ORDER BY PositionName"
+    ).fetchall()
 
     conn.close()
 
-    return render_template("players.html", players=players)
+    return render_template(
+        "players.html",
+        players=players,
+        countries=countries,
+        clubs=clubs,
+        positions=positions,
+        selected_country=country_id,
+        selected_club=club_id,
+        selected_position=position_id,
+        selected_age=age_group,
+        selected_value=value_group,
+        selected_international=international,
+        search_name=search_name
+    )
+
 
 
 @app.route("/countries")

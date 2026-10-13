@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Football Database - Home</title>
+</head>
+
+<body>
+
+    <h1>Football Database</h1>
+    <p>Welcome to your Football Database management system.</p>
+
+    <hr>
+
+    <h2>Main Menu</h2>
+
+    <ul>
+        <li>
+            <a href="{{ url_for('players') }}">View Players</a>
+        </li>
+
+        <li>
+            <a href="{{ url_for('countries') }}">View Countries</a>
+        </li>
+
+        <li>
+            <a href="{{ url_for('clubs') }}">View Clubs</a>
+        </li>
+
+        <li>
+            <a href="{{ url_for('positions') }}">View Positions</a>
+        </li>
+    </ul>
+
+    <hr>
+
+    <p>Select a section above to view or manage your football database.</p>
+
+</body>
+</html>
+
