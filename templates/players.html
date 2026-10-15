@@ -1,55 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Players</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
+
 <nav>
     <a href="{{ url_for('home') }}">Home</a>
-    <a href="{{ url_for('players') }}">Players</a>
-    <a href="{{ url_for('countries') }}">Countries</a>
-    <a href="{{ url_for('clubs') }}">Clubs</a>
-    <a href="{{ url_for('positions') }}">Positions</a>
+
+    {% if session.get('user_id') %}
+        <a href="{{ url_for('players') }}">Players</a>
+
+        {% if session.get('role') == 'admin' %}
+            <a href="{{ url_for('countries') }}">Countries</a>
+            <a href="{{ url_for('clubs') }}">Clubs</a>
+            <a href="{{ url_for('positions') }}">Positions</a>
+        {% endif %}
+
+        <span class="nav-user">
+            {{ session.get('email') }}
+        </span>
+
+        <a href="{{ url_for('logout') }}">Log Out</a>
+    {% else %}
+        <a href="{{ url_for('login') }}">Log In</a>
+        <a href="{{ url_for('signup') }}">Sign Up</a>
+    {% endif %}
 </nav>
 
 <h1>Football Players</h1>
 
-
-
 <h2>Filter Players</h2>
+
 <form method="GET" action="{{ url_for('players') }}" class="filter-form">
 
-    <input type="text" name="search_name" placeholder="Search player name"
-           value="{{ search_name }}">
+    <input
+        type="text"
+        name="search_name"
+        placeholder="Search player name"
+        value="{{ search_name }}"
+    >
 
     <select name="country_id">
         <option value="">All Countries</option>
         {% for country in countries %}
-        <option value="{{ country['ID'] }}"
-            {% if selected_country == country['ID']|string %}selected{% endif %}>
-            {{ country['CountryName'] }}
-        </option>
+            <option value="{{ country['ID'] }}"
+                {% if selected_country == country['ID']|string %}selected{% endif %}>
+                {{ country['CountryName'] }}
+            </option>
         {% endfor %}
     </select>
 
     <select name="club_id">
         <option value="">All Clubs</option>
         {% for club in clubs %}
-        <option value="{{ club['ID'] }}"
-            {% if selected_club == club['ID']|string %}selected{% endif %}>
-            {{ club['ClubName'] }}
-        </option>
+            <option value="{{ club['ID'] }}"
+                {% if selected_club == club['ID']|string %}selected{% endif %}>
+                {{ club['ClubName'] }}
+            </option>
         {% endfor %}
     </select>
 
     <select name="position_id">
         <option value="">All Positions</option>
         {% for position in positions %}
-        <option value="{{ position['ID'] }}"
-            {% if selected_position == position['ID']|string %}selected{% endif %}>
-            {{ position['PositionName'] }}
-        </option>
+            <option value="{{ position['ID'] }}"
+                {% if selected_position == position['ID']|string %}selected{% endif %}>
+                {{ position['PositionName'] }}
+            </option>
         {% endfor %}
     </select>
 
@@ -75,66 +97,93 @@
     </select>
 
     <button type="submit">Apply Filters</button>
+
     <a href="{{ url_for('players') }}" class="clear-filters">Clear</a>
 
 </form>
 
-
-
-
-
-
 <hr>
 
-<br><br>
+<h2>Player List</h2>
 
-<table border="1">
-    <tr>
-        <th>Image</th>
-        <th>ID</th>
-        <th>Player Name</th>
-        <th>Player Country</th>
-        <th>Player Club</th>
-        <th>Player Position</th>
-        <th>Player Age</th>
-        <th>Market Value (1 = 1,000,000)</th>
-        <th>Career Goals</th>
-        <th>Career Matches Played</th>
-        <th>International player?</th>
-        <th>Actions</th>
-    </tr>
+<table>
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>ID</th>
+            <th>Player Name</th>
+            <th>Player Country</th>
+            <th>Player Club</th>
+            <th>Player Position</th>
+            <th>Player Age</th>
+            <th>Market Value (millions)</th>
+            <th>Career Goals</th>
+            <th>Career Matches Played</th>
+            <th>International Player?</th>
 
-    {% for player in players %}
-    <tr>
-        <td>
-            <img src="{{ url_for('static', filename='images/' + player['playerImage']) }}"
-                 width="100">
-        </td>
+            {% if session.get('role') == 'admin' %}
+                <th>Actions</th>
+            {% endif %}
+        </tr>
+    </thead>
 
-        <td>{{ player['playerID'] }}</td>
-        <td>{{ player['playerName'] }}</td>
-        <td>{{ player['CountryName'] or 'Unknown' }}</td>
-        <td>{{ player['ClubName'] or 'Unknown' }}</td>
-        <td>{{ player['PositionName'] or 'Unknown' }}</td>
-        <td>{{ player['Age'] }}</td>
-        <td>{{ player['MarketValue'] }}</td>
-        <td>{{ player['Goals'] }}</td>
-        <td>{{ player['MatchesPlayed'] }}</td>
-        <td>{{ player['InternationalPlayer'] }}</td>
+    <tbody>
+        {% for player in players %}
+            <tr>
+                <td>
+                    {% if player['playerImage'] %}
+                        <img
+                            src="{{ url_for('static', filename='images/' + player['playerImage']) }}"
+                            alt="{{ player['playerName'] }}"
+                            width="100"
+                        >
+                    {% else %}
+                        No image
+                    {% endif %}
+                </td>
 
-        <td>
-            <a href="{{ url_for('edit_player',
-                                player_id=player['playerID']) }}">
-                Edit
-            </a>
-        </td>
-    </tr>
-    {% endfor %}
+                <td>{{ player['playerID'] }}</td>
+                <td>{{ player['playerName'] }}</td>
+                <td>{{ player['CountryName'] or 'Unknown' }}</td>
+                <td>{{ player['ClubName'] or 'Unknown' }}</td>
+                <td>{{ player['PositionName'] or 'Unknown' }}</td>
+                <td>{{ player['Age'] }}</td>
+                <td>{{ player['MarketValue'] }}</td>
+                <td>{{ player['Goals'] }}</td>
+                <td>{{ player['MatchesPlayed'] }}</td>
+                <td>{{ player['InternationalPlayer'] }}</td>
 
+                {% if session.get('role') == 'admin' %}
+                    <td>
+                        <a href="{{ url_for('edit_player', player_id=player['playerID']) }}">
+                            Edit
+                        </a>
+
+                        <form
+                            method="POST"
+                            action="{{ url_for('delete_player', player_id=player['playerID']) }}"
+                            onsubmit="return confirm('Are you sure you want to delete this player?');"
+                        >
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                {% endif %}
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="{{ 12 if session.get('role') == 'admin' else 11 }}">
+                    No players found. Try changing your filters.
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
-<a href="{{ url_for('add_player') }}">
-    <button type="button">+ Add New Player</button>
-</a>
+
+{% if session.get('role') == 'admin' %}
+    <a href="{{ url_for('add_player') }}">
+        <button type="button">+ Add New Player</button>
+    </a>
+{% endif %}
+
 </body>
 </html>
-
